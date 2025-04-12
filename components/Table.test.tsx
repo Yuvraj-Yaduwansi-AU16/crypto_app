@@ -12,7 +12,6 @@ jest.mock("@/lib/store", () => ({
 }));
 
 describe("TableComponent", () => {
-  // Create a minimal type for the table component's needs
   type MinimalCryptoCurrency = Pick<
     CryptoCurrency,
     | "id"

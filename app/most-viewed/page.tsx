@@ -5,7 +5,7 @@ import { CardContent } from "@/components/ui/card";
 import { Card } from "@/components/ui/card";
 import React from "react";
 import MostViewedTableComponent from "@/components/mostViewedTable";
-import useCurrencyStore from "@/lib/currencyStore";
+import useCurrencyStore from "@/lib/store/currencyStore";
 import Image from "next/image";
 const MostViewedPage = () => {
   const mostViewedData = useCurrencyStore((state) => state.mostViewedData);

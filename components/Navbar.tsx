@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useTransition } from "react";
 import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { Moon, Sun, Home, BarChart2, TrendingUp } from "lucide-react";
@@ -9,15 +9,17 @@ import { cn } from "@/lib/utils";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) return null;
+  const [isPending, startTransition] = useTransition();
 
   const isActive = (path: string) => pathname === path;
+
+  const handleNavigation = (path: string) => {
+    startTransition(() => {
+      router.push(path);
+    });
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/75 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -41,33 +43,39 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <Button
             variant={isActive("/") ? "default" : "ghost"}
-            onClick={() => router.push("/")}
+            onClick={() => handleNavigation("/")}
             className={cn(
-              "flex items-center gap-2",
-              isActive("/") && "bg-primary text-primary-foreground"
+              "flex items-center gap-2 transition-colors duration-200",
+              isActive("/") && "bg-primary text-primary-foreground",
+              isPending && "opacity-50"
             )}
+            disabled={isPending}
           >
             <Home className="h-4 w-4" />
             <span>Top 50</span>
           </Button>
           <Button
             variant={isActive("/charts") ? "default" : "ghost"}
-            onClick={() => router.push("/charts")}
+            onClick={() => handleNavigation("/charts")}
             className={cn(
-              "flex items-center gap-2",
-              isActive("/charts") && "bg-primary text-primary-foreground"
+              "flex items-center gap-2 transition-colors duration-200",
+              isActive("/charts") && "bg-primary text-primary-foreground",
+              isPending && "opacity-50"
             )}
+            disabled={isPending}
           >
             <BarChart2 className="h-4 w-4" />
             <span>Charts</span>
           </Button>
           <Button
             variant={isActive("/most-viewed") ? "default" : "ghost"}
-            onClick={() => router.push("/most-viewed")}
+            onClick={() => handleNavigation("/most-viewed")}
             className={cn(
-              "flex items-center gap-2",
-              isActive("/most-viewed") && "bg-primary text-primary-foreground"
+              "flex items-center gap-2 transition-colors duration-200",
+              isActive("/most-viewed") && "bg-primary text-primary-foreground",
+              isPending && "opacity-50"
             )}
+            disabled={isPending}
           >
             <TrendingUp className="h-4 w-4" />
             <span>Most Viewed</span>

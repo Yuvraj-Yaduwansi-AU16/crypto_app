@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect } from "react";
 import { useParams } from "next/navigation";
-import useCurrencyStore from "@/lib/currencyStore";
+import useCurrencyStore from "@/lib/store/currencyStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { formatNumber } from "@/lib/utils";
-import useCryptoStore from "@/lib/store";
+import useCryptoStore from "@/lib/store/cryptoStore";
 import {
   Popover,
   PopoverContent,
@@ -13,10 +13,12 @@ import {
 } from "@/components/ui/popover";
 import Loading from "@/app/loading";
 import Error from "@/app/error";
+import Link from "next/link";
 const CurrencyPage = () => {
   const params = useParams();
   const id = params.id as string;
   const currencyData = useCurrencyStore((state) => state.currencyData);
+  const isLoading = useCurrencyStore((state) => state.isLoading);
   const getCurrencyData = useCurrencyStore((state) => state.getCurrencyData);
   const error = useCurrencyStore((state) => state.error);
   const currency = useCryptoStore((state) => state.currency);
@@ -28,12 +30,12 @@ const CurrencyPage = () => {
     return <Error error={error} reset={() => getCurrencyData(id)} />;
   }
 
-  if (!currencyData) {
+  if (isLoading || !currencyData) {
     return <Loading />;
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-8">
+    <div className="container mx-auto py-8 space-y-8 bg-[#C8B7E6] dark:bg-background px-4">
       <Card>
         <CardHeader>
           <div className="flex items-center gap-4">
@@ -149,7 +151,9 @@ const CurrencyPage = () => {
                   height={20}
                   className="rounded-full"
                 />{" "}
-                {currencyData.links.homepage[0]}
+                <Link href={currencyData.links.homepage[0]} target="_blank">
+                  {currencyData.links.homepage[0]}
+                </Link>
               </p>
             </div>
             <div className="space-y-2">
@@ -165,15 +169,19 @@ const CurrencyPage = () => {
                   />{" "}
                   Reveal Github Urls
                 </PopoverTrigger>
-                <PopoverContent>
+                <PopoverContent className="w-fit">
                   {currencyData.links.repos_url.github.map((url) => (
                     <p
                       key={url}
                       className="text-sm text-muted-foreground my-2 underline"
                     >
-                      <a href={url} target="_blank" rel="noopener noreferrer">
+                      <Link
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {url}
-                      </a>
+                      </Link>
                     </p>
                   ))}
                 </PopoverContent>
@@ -194,7 +202,7 @@ const CurrencyPage = () => {
                   : "N/A"}
               </p>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 overflow-clip">
               <p className="text-sm text-muted-foreground">Subreddit</p>
               <p className="inline-flex items-center gap-2 text-2xl font-bold cursor-pointer  hover:underline">
                 <Image
@@ -204,7 +212,9 @@ const CurrencyPage = () => {
                   height={20}
                   className="rounded-full "
                 />{" "}
-                {currencyData.links.subreddit_url}
+                <Link href={currencyData.links.subreddit_url} target="_blank">
+                  {currencyData.links.subreddit_url}
+                </Link>
               </p>
             </div>
             <div className="space-y-2">
@@ -220,15 +230,19 @@ const CurrencyPage = () => {
                   />{" "}
                   Reveal Blockchain Sites
                 </PopoverTrigger>
-                <PopoverContent>
+                <PopoverContent className="w-fit">
                   {currencyData.links.blockchain_site.map((url) => (
                     <p
                       key={url}
                       className="text-sm text-muted-foreground my-2 underline"
                     >
-                      <a href={url} target="_blank" rel="noopener noreferrer">
+                      <Link
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {url}
-                      </a>
+                      </Link>
                     </p>
                   ))}
                 </PopoverContent>

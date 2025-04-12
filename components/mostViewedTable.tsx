@@ -10,7 +10,7 @@ import {
 import { Coins } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import useCurrencyStore from "@/lib/currencyStore";
+import useCurrencyStore from "@/lib/store/currencyStore";
 
 const MostViewedTableComponent: React.FC = () => {
   const mostViewedData = useCurrencyStore((state) => state.mostViewedData);

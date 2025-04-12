@@ -2,12 +2,14 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import TableComponent from "@/components/Table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import useCryptoStore from "@/lib/store";
+import useCryptoStore from "@/lib/store/cryptoStore";
 import CurrencyDropdown from "@/components/CurrencyDropdown";
 import { Input } from "@/components/ui/input";
 import Error from "@/app/error";
+import Loading from "./loading";
 export default function Home() {
   const cryptoData = useCryptoStore((state) => state.cryptoData);
+  const isLoading = useCryptoStore((state) => state.isLoading);
   const getCryptoData = useCryptoStore((state) => state.getCryptoData);
   const error = useCryptoStore((state) => state.error);
   const [searchText, setSearchText] = useState("");
@@ -37,7 +39,9 @@ export default function Home() {
   if (error) {
     return <Error error={error} reset={() => getCryptoData()} />;
   }
-
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="mx-auto py-8 space-y-8 px-8 bg-[#C8B7E6] dark:bg-background">
       <Input

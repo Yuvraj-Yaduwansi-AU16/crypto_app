@@ -5,6 +5,7 @@ import { CryptoCurrency } from "@/components/CustomChart/types";
 type CryptoStore = {
   cryptoData: CryptoCurrency[];
   currency: string;
+  isLoading: boolean;
   setCurrency: (currency: string) => void;
   setCryptoData: (cryptoData: CryptoCurrency[]) => void;
   getCryptoData: () => Promise<void>;
@@ -17,6 +18,7 @@ const useCryptoStore = create<CryptoStore>()(
     (set) => ({
       cryptoData: [],
       currency: "USD",
+      isLoading: false,
       setCurrency: (currency: string) => {
         set({ currency });
         useCryptoStore.getState().getCryptoData();
@@ -24,14 +26,14 @@ const useCryptoStore = create<CryptoStore>()(
       setCryptoData: (cryptoData: CryptoCurrency[]) => set({ cryptoData }),
       getCryptoData: async () => {
         try {
+          set({ isLoading: true });
           const response = await fetch(
             `/api/proxy/getData?vs_currency=${useCryptoStore.getState().currency}`
           );
           const data = await response.json();
-          console.log("data from store", data);
-          set({ cryptoData: data });
+          set({ cryptoData: data, isLoading: false });
         } catch (error) {
-          set({ error: error as Error });
+          set({ error: error as Error, isLoading: false });
         }
       },
       error: null,

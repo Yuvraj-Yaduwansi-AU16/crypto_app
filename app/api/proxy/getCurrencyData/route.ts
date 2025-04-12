@@ -5,7 +5,6 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
-    console.log("currencyid", id);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/coins/${id}`,
       {

@@ -17,17 +17,6 @@ export interface CryptoCurrency {
     circulating_supply: number;
     total_supply: number;
     max_supply: number;
-    ath: number;
-    ath_change_percentage: number;
-    ath_date: string; 
-    atl: number;
-    atl_change_percentage: number;
-    atl_date: string; 
-    roi: null | {
-      times: number;
-      currency: string;
-      percentage: number;
-    };
     last_updated: string; 
   }
   

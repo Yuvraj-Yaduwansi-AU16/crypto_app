@@ -3,13 +3,6 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
-    // const { searchParams } = new URL(request.url);
-    // const token = searchParams.get('token');
-    
-    // if (!token) {
-    //   return NextResponse.json({ success: false, message: 'Token is required' });
-    // }
-
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/ping`,
       {

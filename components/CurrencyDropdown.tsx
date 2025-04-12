@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useCryptoStore from "@/lib/store";
+import useCryptoStore from "@/lib/store/cryptoStore";
 import { ChevronDown } from "lucide-react";
 const CurrencyDropdown = () => {
   const { currency, setCurrency } = useCryptoStore();

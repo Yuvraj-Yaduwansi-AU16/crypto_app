@@ -17,7 +17,7 @@ import {
   Coins,
 } from "lucide-react";
 import Image from "next/image";
-import useCryptoStore from "@/lib/store";
+import useCryptoStore from "@/lib/store/cryptoStore";
 import { formatNumber, formatPercentage } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
