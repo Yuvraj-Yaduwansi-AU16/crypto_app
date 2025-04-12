@@ -49,7 +49,8 @@ yarn install
 3. Create a `.env.local` file in the root directory and add your environment variables:
 
 ```env
-NEXT_PUBLIC_COINGECKO_API_URL=https://api.coingecko.com/api/v3
+NEXT_PUBLIC_API_URL=https://api.coingecko.com/api/v3
+NEXT_PUBLIC_API_HEADER_KEY=your_api_key
 ```
 
 4. Run the development server:
@@ -72,6 +73,8 @@ npm test
 yarn test
 ```
 
+Test files are located next to the component/page being tested, so that they are easier to locate and debug.
+
 ## Project Structure
 
 ```
@@ -82,7 +85,6 @@ crypto-tracker/
 │   ├── lib/               # Utility functions and store
 │   └── page.tsx           # Main page component
 ├── public/                # Static assets
-├── tests/                 # Test files
 ├── .env.local            # Environment variables
 ├── package.json          # Project dependencies
 └── README.md             # Project documentation
