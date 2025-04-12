@@ -35,7 +35,7 @@ const CurrencyPage = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-8 bg-[#C8B7E6] dark:bg-background px-4">
+    <div className="mx-auto py-8 space-y-8 bg-[#C8B7E6] dark:bg-background px-4">
       <Card>
         <CardHeader>
           <div className="flex items-center gap-4">

@@ -11,7 +11,6 @@ const ChartsPage = () => {
   const cryptoData = useCryptoStore((state) => state.cryptoData);
   const isLoading = useCryptoStore((state) => state.isLoading);
 
-  // Memoize the charts to prevent unnecessary re-renders
   const charts = useMemo(
     () => [
       { component: MarketCapChart, key: "market-cap" },
