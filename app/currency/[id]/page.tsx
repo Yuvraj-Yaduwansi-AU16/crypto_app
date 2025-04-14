@@ -17,7 +17,9 @@ import Link from "next/link";
 const CurrencyPage = () => {
   const params = useParams();
   const id = params.id as string;
-  const currencyData = useCurrencyStore((state) => state.currencyData);
+  const currencyData = useCurrencyStore(
+    (state) => state.currencyData[id]?.data
+  );
   const isLoading = useCurrencyStore((state) => state.isLoading);
   const getCurrencyData = useCurrencyStore((state) => state.getCurrencyData);
   const error = useCurrencyStore((state) => state.error);

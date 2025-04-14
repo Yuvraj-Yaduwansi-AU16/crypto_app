@@ -9,15 +9,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useCryptoStore from "@/lib/store/cryptoStore";
 import { ChevronDown } from "lucide-react";
+import debounce from "lodash/debounce";
+
+const debouncedSetCurrency = debounce((currency: string) => {
+  useCryptoStore.getState().setCurrency(currency);
+}, 300);
+
 const CurrencyDropdown = () => {
-  const { currency, setCurrency } = useCryptoStore();
+  const { currency } = useCryptoStore();
 
   const currencies = ["USD", "CHF", "EUR", "GBP", "INR"];
 
   const displayCurrencies = currencies.map((displayingCurrency) =>
     displayingCurrency !== currency ? (
       <DropdownMenuItem
-        onClick={() => setCurrency(displayingCurrency)}
+        onClick={() => debouncedSetCurrency(displayingCurrency)}
         key={displayingCurrency}
         className="cursor-pointer"
       >

@@ -8,7 +8,9 @@ import CurrentPriceChart from "@/components/CustomChart/CurrentPriceChart";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const ChartsPage = () => {
-  const cryptoData = useCryptoStore((state) => state.cryptoData);
+  const cryptoData = useCryptoStore(
+    (state) => state.cryptoData[state.currency]
+  );
   const isLoading = useCryptoStore((state) => state.isLoading);
 
   const charts = useMemo(
