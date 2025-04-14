@@ -9,7 +9,7 @@ import Error from "@/app/error";
 import Loading from "./loading";
 export default function Home() {
   const cryptoData = useCryptoStore(
-    (state) => state.cryptoData[state.currency]
+    (state) => state.cryptoData[state.currency] || []
   );
   const isLoading = useCryptoStore((state) => state.isLoading);
   const getCryptoData = useCryptoStore((state) => state.getCryptoData);

@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const ChartsPage = () => {
   const cryptoData = useCryptoStore(
-    (state) => state.cryptoData[state.currency]
+    (state) => state.cryptoData[state.currency] || []
   );
   const isLoading = useCryptoStore((state) => state.isLoading);
 
@@ -23,7 +23,7 @@ const ChartsPage = () => {
     []
   );
 
-  if (isLoading) {
+  if (isLoading || !cryptoData.length) {
     return (
       <div className="container mx-auto py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-2">
