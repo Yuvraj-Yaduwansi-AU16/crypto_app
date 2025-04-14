@@ -15,15 +15,22 @@ export default function Home() {
   const getCryptoData = useCryptoStore((state) => state.getCryptoData);
   const error = useCryptoStore((state) => state.error);
   const [searchText, setSearchText] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    getCryptoData();
+  }, [getCryptoData]);
 
   const searchData = useMemo(() => {
+    if (!mounted) return []; // Return empty array during SSR
     if (searchText.trim() === "") {
       return cryptoData;
     }
     return cryptoData.filter((crypto) =>
       crypto.name.toLowerCase().includes(searchText.toLowerCase())
     );
-  }, [searchText, cryptoData]);
+  }, [searchText, cryptoData, mounted]);
 
   const pageTitle = useMemo(() => {
     return searchText.trim() === ""
@@ -35,15 +42,18 @@ export default function Home() {
     setSearchText(e.target.value);
   }, []);
 
-  useEffect(() => {
-    getCryptoData();
-  }, [getCryptoData]);
+  if (!mounted) {
+    return <Loading />;
+  }
+
   if (error) {
     return <Error error={error} reset={() => getCryptoData()} />;
   }
+
   if (isLoading) {
     return <Loading />;
   }
+
   return (
     <div className="mx-auto py-8 space-y-8 px-8 bg-[#C8B7E6] dark:bg-background">
       <Input
