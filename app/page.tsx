@@ -7,30 +7,30 @@ import CurrencyDropdown from "@/components/CurrencyDropdown";
 import { Input } from "@/components/ui/input";
 import Error from "@/app/error";
 import Loading from "./loading";
+
 export default function Home() {
-  const cryptoData = useCryptoStore(
-    (state) => state.cryptoData[state.currency] || []
-  );
+  const cryptoData = useCryptoStore((state) => state.cryptoData);
+  const currency = useCryptoStore((state) => state.currency);
   const isLoading = useCryptoStore((state) => state.isLoading);
   const getCryptoData = useCryptoStore((state) => state.getCryptoData);
   const error = useCryptoStore((state) => state.error);
   const [searchText, setSearchText] = useState("");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     getCryptoData();
   }, [getCryptoData]);
 
   const searchData = useMemo(() => {
-    if (!mounted) return []; // Return empty array during SSR
+    if (!cryptoData || !cryptoData[currency]) return [];
+
+    const currentData = cryptoData[currency];
     if (searchText.trim() === "") {
-      return cryptoData;
+      return currentData;
     }
-    return cryptoData.filter((crypto) =>
+    return currentData.filter((crypto) =>
       crypto.name.toLowerCase().includes(searchText.toLowerCase())
     );
-  }, [searchText, cryptoData, mounted]);
+  }, [searchText, cryptoData, currency]);
 
   const pageTitle = useMemo(() => {
     return searchText.trim() === ""
@@ -41,10 +41,6 @@ export default function Home() {
   const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   }, []);
-
-  if (!mounted) {
-    return <Loading />;
-  }
 
   if (error) {
     return <Error error={error} reset={() => getCryptoData()} />;
@@ -69,11 +65,15 @@ export default function Home() {
           <CurrencyDropdown />
         </CardHeader>
         <CardContent>
-          {searchData.length > 0 ? (
+          {cryptoData &&
+          cryptoData[currency] &&
+          cryptoData[currency].length > 0 ? (
             <TableComponent data={searchData} />
           ) : (
             <div className="text-center text-gray-500">
-              No results found for &quot;{searchText}&quot;
+              {!cryptoData || !cryptoData[currency]
+                ? "Loading data..."
+                : `No results found for "${searchText}"`}
             </div>
           )}
         </CardContent>

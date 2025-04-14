@@ -14,16 +14,16 @@ import {
 import Loading from "@/app/loading";
 import Error from "@/app/error";
 import Link from "next/link";
+
 const CurrencyPage = () => {
   const params = useParams();
   const id = params.id as string;
-  const currencyData = useCurrencyStore(
-    (state) => state.currencyData[id]?.data
-  );
+  const currencyData = useCurrencyStore((state) => state.currencyData);
   const isLoading = useCurrencyStore((state) => state.isLoading);
   const getCurrencyData = useCurrencyStore((state) => state.getCurrencyData);
   const error = useCurrencyStore((state) => state.error);
   const currency = useCryptoStore((state) => state.currency);
+
   useEffect(() => {
     getCurrencyData(id);
   }, [id, getCurrencyData]);
@@ -32,9 +32,16 @@ const CurrencyPage = () => {
     return <Error error={error} reset={() => getCurrencyData(id)} />;
   }
 
-  if (isLoading || !currencyData) {
+  if (
+    isLoading ||
+    !currencyData ||
+    !currencyData[id] ||
+    !currencyData[id].data
+  ) {
     return <Loading />;
   }
+
+  const currentCurrencyData = currencyData[id].data;
 
   return (
     <div className="mx-auto py-8 space-y-8 bg-[#C8B7E6] dark:bg-background px-4">
@@ -42,16 +49,18 @@ const CurrencyPage = () => {
         <CardHeader>
           <div className="flex items-center gap-4">
             <Image
-              src={currencyData.image.large}
-              alt={currencyData.name}
+              src={currentCurrencyData.image.large}
+              alt={currentCurrencyData.name}
               width={48}
               height={48}
               className="rounded-full"
             />
             <div>
-              <CardTitle className="text-2xl">{currencyData.name}</CardTitle>
+              <CardTitle className="text-2xl">
+                {currentCurrencyData.name}
+              </CardTitle>
               <p className="text-muted-foreground">
-                {currencyData.symbol.toUpperCase()}
+                {currentCurrencyData.symbol.toUpperCase()}
               </p>
             </div>
           </div>
@@ -60,7 +69,7 @@ const CurrencyPage = () => {
           <div className="space-y-8 mb-8">
             <p className="text-sm text-muted-foreground">Description</p>
             <p className="text-sm text-muted-foreground">
-              {currencyData.description.en}
+              {currentCurrencyData.description.en}
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -68,7 +77,7 @@ const CurrencyPage = () => {
               <p className="text-sm text-muted-foreground">Current Price</p>
               <p className="text-2xl font-bold">
                 {formatNumber(
-                  currencyData.market_data.current_price[
+                  currentCurrencyData.market_data.current_price[
                     currency.toLowerCase()
                   ],
                   currency
@@ -79,7 +88,9 @@ const CurrencyPage = () => {
               <p className="text-sm text-muted-foreground">Market Cap</p>
               <p className="text-2xl font-bold">
                 {formatNumber(
-                  currencyData.market_data.market_cap[currency.toLowerCase()],
+                  currentCurrencyData.market_data.market_cap[
+                    currency.toLowerCase()
+                  ],
                   currency
                 )}
               </p>
@@ -88,7 +99,9 @@ const CurrencyPage = () => {
               <p className="text-sm text-muted-foreground">24h Volume</p>
               <p className="text-2xl font-bold">
                 {formatNumber(
-                  currencyData.market_data.total_volume[currency.toLowerCase()],
+                  currentCurrencyData.market_data.total_volume[
+                    currency.toLowerCase()
+                  ],
                   currency
                 )}
               </p>
@@ -97,12 +110,13 @@ const CurrencyPage = () => {
               <p className="text-sm text-muted-foreground">24h Change</p>
               <p
                 className={`text-2xl font-bold ${
-                  currencyData.market_data.price_change_percentage_24h >= 0
+                  currentCurrencyData.market_data.price_change_percentage_24h >=
+                  0
                     ? "text-green-500"
                     : "text-red-500"
                 }`}
               >
-                {currencyData.market_data.price_change_percentage_24h.toFixed(
+                {currentCurrencyData.market_data.price_change_percentage_24h.toFixed(
                   2
                 )}
                 %
@@ -111,12 +125,14 @@ const CurrencyPage = () => {
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Market Cap Rank</p>
               <p className="text-2xl font-bold">
-                #{currencyData.market_cap_rank}
+                #{currentCurrencyData.market_cap_rank}
               </p>
             </div>
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Genesis Date</p>
-              <p className="text-2xl font-bold">{currencyData.genesis_date}</p>
+              <p className="text-2xl font-bold">
+                {currentCurrencyData.genesis_date}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -135,7 +151,7 @@ const CurrencyPage = () => {
             <div>
               <CardTitle className="text-2xl">Social Links</CardTitle>
               <p className="text-muted-foreground">
-                {currencyData.symbol.toUpperCase()}
+                {currentCurrencyData.symbol.toUpperCase()}
               </p>
             </div>
           </div>
@@ -147,14 +163,17 @@ const CurrencyPage = () => {
 
               <p className="inline-flex items-center gap-2 text-2xl font-bold cursor-pointer  hover:underline">
                 <Image
-                  src={currencyData.image.thumb}
-                  alt={currencyData.name}
+                  src={currentCurrencyData.image.thumb}
+                  alt={currentCurrencyData.name}
                   width={20}
                   height={20}
                   className="rounded-full"
                 />{" "}
-                <Link href={currencyData.links.homepage[0]} target="_blank">
-                  {currencyData.links.homepage[0]}
+                <Link
+                  href={currentCurrencyData.links.homepage[0]}
+                  target="_blank"
+                >
+                  {currentCurrencyData.links.homepage[0]}
                 </Link>
               </p>
             </div>
@@ -172,7 +191,7 @@ const CurrencyPage = () => {
                   Reveal Github Urls
                 </PopoverTrigger>
                 <PopoverContent className="w-fit">
-                  {currencyData.links.repos_url.github.map((url) => (
+                  {currentCurrencyData.links.repos_url.github.map((url) => (
                     <p
                       key={url}
                       className="text-sm text-muted-foreground my-2 underline"
@@ -199,8 +218,8 @@ const CurrencyPage = () => {
                   height={20}
                   className="rounded-full "
                 />{" "}
-                {currencyData.links.twitter_screen_name.length > 0
-                  ? currencyData.links.twitter_screen_name
+                {currentCurrencyData.links.twitter_screen_name.length > 0
+                  ? currentCurrencyData.links.twitter_screen_name
                   : "N/A"}
               </p>
             </div>
@@ -214,8 +233,11 @@ const CurrencyPage = () => {
                   height={20}
                   className="rounded-full "
                 />{" "}
-                <Link href={currencyData.links.subreddit_url} target="_blank">
-                  {currencyData.links.subreddit_url}
+                <Link
+                  href={currentCurrencyData.links.subreddit_url}
+                  target="_blank"
+                >
+                  {currentCurrencyData.links.subreddit_url}
                 </Link>
               </p>
             </div>
@@ -233,7 +255,7 @@ const CurrencyPage = () => {
                   Reveal Blockchain Sites
                 </PopoverTrigger>
                 <PopoverContent className="w-fit">
-                  {currencyData.links.blockchain_site.map((url) => (
+                  {currentCurrencyData.links.blockchain_site.map((url) => (
                     <p
                       key={url}
                       className="text-sm text-muted-foreground my-2 underline"
@@ -260,8 +282,8 @@ const CurrencyPage = () => {
                   height={20}
                   className="rounded-full "
                 />{" "}
-                {currencyData.links.facebook_username.length > 0
-                  ? currencyData.links.facebook_username
+                {currentCurrencyData.links.facebook_username.length > 0
+                  ? currentCurrencyData.links.facebook_username
                   : "N/A"}
               </p>
             </div>

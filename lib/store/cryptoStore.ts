@@ -47,7 +47,6 @@ const useCryptoStore = create<CryptoStore>()(
           const lastFetch = get().lastFetchTime[currency] || 0;
           const cachedData = get().cryptoData[currency];
           
-          // Check if we have cached data that's still valid AND not a failed response
           if (
             cachedData && 
             now - lastFetch <= CACHE_DURATION &&
